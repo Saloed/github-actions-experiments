@@ -14,3 +14,10 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+task<TestReport>("mergeTestReports") {
+    destinationDir = rootDir.resolve("mergedReports")
+    val reports = rootDir.resolve("reports")
+    val binaryReports = reports.walkTopDown().filter { it.isDirectory && it.name == "binary" }.toList()
+    reportOn(*binaryReports.toTypedArray())
+}
