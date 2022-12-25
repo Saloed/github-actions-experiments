@@ -15,9 +15,19 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+fun Project.stringProperty(name: String): String? {
+    if (!project.hasProperty(name)) {
+        return null
+    }
+
+    return project.property(name).toString()
+}
+
 task<TestReport>("mergeTestReports") {
-    val mergePrefix = project.findProperty("testReportMergePrefix").toString()
-    destinationDir = rootDir.resolve(mergePrefix)
-    val reports = rootDir.resolve("reports").listFiles { f: File -> f.name.startsWith(mergePrefix) }
-    reportOn(*reports)
+    val mergePrefix = stringProperty("testReportMergePrefix")
+    if (mergePrefix != null) {
+        destinationDir = rootDir.resolve(mergePrefix)
+        val reports = rootDir.resolve("reports").listFiles { f: File -> f.name.startsWith(mergePrefix) }
+        reportOn(*reports)
+    }
 }
