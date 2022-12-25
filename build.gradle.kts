@@ -16,8 +16,8 @@ tasks.withType<Test> {
 }
 
 task<TestReport>("mergeTestReports") {
-    destinationDir = rootDir.resolve("mergedReports")
-    val reports = rootDir.resolve("reports")
-    val binaryReports = reports.walkTopDown().filter { it.isDirectory && it.name == "binary" }.toList()
-    reportOn(*binaryReports.toTypedArray())
+    val mergePrefix = project.property("testReportMergePrefix").toString()
+    destinationDir = rootDir.resolve(mergePrefix)
+    val reports = rootDir.resolve("reports").listFiles { f: File -> f.name.startsWith(mergePrefix) }
+    reportOn(*reports)
 }

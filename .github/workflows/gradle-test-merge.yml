@@ -37,7 +37,14 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ format('test-report-{0}', matrix.test) }}
+          name: ${{ format('test-report-ubuntu-{0}', matrix.test) }}
+          path: build/test-results/test/binary
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ format('test-report-windows-{0}', matrix.test) }}
           path: build/test-results/test/binary
 
   merge_report:
@@ -62,4 +69,21 @@ jobs:
           java-version: 8
           distribution: 'zulu'
 
+      - name: Merge reports (ubuntu)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            mergeTestReports
+            -PtestReportMergePrefix=test-report-ubuntu
 
+      - name: Merge reports (windows)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            mergeTestReports
+            -PtestReportMergePrefix=test-report-windows
+
+      - name: Upload merged reports
+        uses: actions/upload-artifact@v3
+        with:
+          path: test-report-*
