@@ -2,16 +2,13 @@ name: Gradle test report merge
 
 on: workflow_dispatch
 
-env:
-  TEST_MATRIX: '["1","0","2"]'
-
 jobs:
   run_tests:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
-        test: ${{ fromJSON(env.TEST_MATRIX) }}
+        test: ${{ fromJSON('["1","0","2"]') }}
 
     steps:
       - uses: actions/checkout@v3
