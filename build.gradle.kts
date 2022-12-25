@@ -16,7 +16,7 @@ tasks.withType<Test> {
 }
 
 task<TestReport>("mergeTestReports") {
-    val mergePrefix = project.property("testReportMergePrefix").toString()
+    val mergePrefix = project.findProperty("testReportMergePrefix").toString()
     destinationDir = rootDir.resolve(mergePrefix)
     val reports = rootDir.resolve("reports").listFiles { f: File -> f.name.startsWith(mergePrefix) }
     reportOn(*reports)
